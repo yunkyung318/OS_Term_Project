@@ -2,28 +2,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SchedulingManager {
-	private List<Process> processes;	// ÇÁ·Î¼¼½ºµéÀÇ list
-	/* private List<Event> timeflow; */		// °£Æ®Â÷Æ® ±×¸®±â¿ë list(?)
-	private int timeQuantum;			// ½Ã°£ÇÒ´ç·®(Å¸ÀÓ½½¶óÀÌ½º)
+	private List<Process> processes;	// í”„ë¡œì„¸ìŠ¤ë“¤ì˜ list
+	/* private List<Event> timeflow; */		// ê°„íŠ¸ì°¨íŠ¸ ê·¸ë¦¬ê¸°ìš© list(?)
+	private int timeQuantum;			// ì‹œê°„í• ë‹¹ëŸ‰(íƒ€ì„ìŠ¬ë¼ì´ìŠ¤)
 	
-	/* Scheduling Manager Å¬·¡½ºÀÇ »ı¼ºÀÚ */
+	/* Scheduling Manager í´ë˜ìŠ¤ì˜ ìƒì„±ì */
 	public SchedulingManager() {
 		processes = new ArrayList();
 		// timeflow = new ArrayList();
-		timeQuantum = 1; // ½Ã°£ÇÒ´ç·®(Å¸ÀÓ½½¶óÀÌ½º)Àº ÃÊ±â°ª 1·Î ÁöÁ¤
+		timeQuantum = 1; // ì‹œê°„í• ë‹¹ëŸ‰(íƒ€ì„ìŠ¬ë¼ì´ìŠ¤)ì€ ì´ˆê¸°ê°’ 1ë¡œ ì§€ì •
 	}
 	
-	/* ½Ã°£ÇÒ´ç·®(Å¸ÀÓ½½¶óÀÌ½º) setter */
+	/* ì‹œê°„í• ë‹¹ëŸ‰(íƒ€ì„ìŠ¬ë¼ì´ìŠ¤) setter */
 	public void setTimeQuantum(int timeQuantum) {
 		this.timeQuantum = timeQuantum;
 	}
 	
-	/* ½Ã°£ÇÒ´ç·®(Å¸ÀÓ½½¶óÀÌ½º) getter */
+	/* ì‹œê°„í• ë‹¹ëŸ‰(íƒ€ì„ìŠ¬ë¼ì´ìŠ¤) getter */
 	public int getTimeQuantum() {
 		return this.timeQuantum;
 	}
 	
-	/* AWT(Æò±Õ ´ë±â ½Ã°£) getter */
+	/* AWT(í‰ê·  ëŒ€ê¸° ì‹œê°„) getter */
 	public double getAvgWaitingTime() {
 		double avg = 0.0;
 		
@@ -34,7 +34,7 @@ public abstract class SchedulingManager {
 		return avg / processes.size(); 
 	}
 	
-	/* ART(Æò±Õ ÀÀ´ä ½Ã°£) getter */
+	/* ART(í‰ê·  ì‘ë‹µ ì‹œê°„) getter */
 	public double getAvgResponseTime() {
         double avg = 0.0;
         
@@ -45,7 +45,7 @@ public abstract class SchedulingManager {
         return avg / processes.size();
     }
 	
-	/* ATT(Æò±Õ ¹İÈ¯ ½Ã°£) getter */
+	/* ATT(í‰ê·  ë°˜í™˜ ì‹œê°„) getter */
 	public double getAvgTurnAroundTime() {
         double avg = 0.0;
         
