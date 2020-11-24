@@ -13,7 +13,7 @@ public class FCFS extends SchedulerManage {
     public void process() {
         // sort로 프로세스 목록들을 정렬.
         // 두번째 인자는 정렬 기준 -> 기준은 i(o1)번과 i+1(o2)번을 가지고 도착시간을 비교해 오름차순으로 정렬
-        Collections.sort(this.getRows(), (Object o1, Object o2) -> {
+        Collections.sort(this.getRows() ,(Object o1, Object o2) -> {
             if (((Row) o1).getArrivalTime() == ((Row) o2).getArrivalTime()) {
                 return 0;
             }

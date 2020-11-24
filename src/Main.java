@@ -9,12 +9,13 @@ public class Main extends JFrame {
 	JScrollPane js;
 	JPanel Panel;
 	DefaultTableModel model;
-	JButton button1;
-	JButton button2;
-	JButton button3;
-	JButton button4;
+	JButton resetBtn;
+	JButton addBtn;
+	JButton deChoiceBtn;
+	JButton deLastBtn;
+	JButton resultBtn;
 
-	String b[] = { " ", " ", " ", " ", " " };
+	String blank[] = { "", "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
 
 	public Main() {
 		setTitle("test");
@@ -22,60 +23,76 @@ public class Main extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 
-		String a[] = { "���μ���ID", "�����ð�", "���񽺽ð�", "�켱����", "�ð��Ҵ緮" };
+		String ment[] = { "프로세스ID", "도착시간", "서비스시간", "우선순위", "시간할당량" };
 
-		model = new DefaultTableModel(a, 0);
-		table = new JTable(model);
-
+		model = new DefaultTableModel(ment, 0); // DefaultTableModel을 통해 table안
+		table = new JTable(model); // 메모리 손상없이 삽입,삭제가 자유로움
 		Panel = new JPanel();
-		Panel.setLayout(new BorderLayout());
 
-		js = new JScrollPane(table);
-		Panel.add(js, BorderLayout.CENTER);
-		
-		c.add(Panel);
+		js = new JScrollPane(table); // 프로세스가 많아지면 스크롤로 관리 가능
+		Panel.add(js);
 
-		String choice[] = { "FCFS", "SJF", "���� Priority", "���� Priority", "RR", "SRT", "HRN" };
+		String choice[] = { "FCFS", "SJF", "비선점 Priority", "선점 Priority", "RR", "SRT", "HRN" };
 		JComboBox<String> Combo = new JComboBox<>();
 		for (int i = 0; i < choice.length; i++) {
 			Combo.addItem(choice[i]);
-		}
+		} // combo 박스를 이용해 스케줄링 방법을 리스트 구현
 
-		c.add(Combo);
-		button1 = new JButton("�޸� ����");
-		button1.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                int row = table.getRowCount();
-                if (row > -1) {
-                	for(int i=row-1;i>-1;i--)
-                		model.removeRow(i);
-                }
-            }
-        });
-		button2 = new JButton("���μ��� �߰�");
-		button2.addActionListener(new ActionListener() {
+		resetBtn = new JButton("메모리 리셋");
+		resetBtn.setBackground(new Color(242, 255, 237));
+		resetBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				model.addRow(b);
+				int row = table.getRowCount(); // 행의 개수를 카운트해서 row변수에 저장
+				if (row > 0) {
+					for (int i = row - 1; i > -1; i--) // (행의 개수-1)부터 --해서 모든 메모리를 삭제
+						model.removeRow(i);
+				}
 			}
 		});
-		
-		button3 = new JButton("���μ��� ����");
-		button3.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e) {
-                int row = table.getSelectedRow();
-                if (row > -1) {
-                    model.removeRow(row);
-                }
-            }
-        });
-		button4 = new JButton("��� â ����");
 
-		c.add(button1);
-		c.add(button2);
-		c.add(button3);
-		c.add(button4);
+		addBtn = new JButton("프로세스 추가");
+		addBtn.setBackground(new Color(242, 255, 237));
+		addBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				model.addRow(blank);	// 프로세스 추가 시 자동으로 5열의 빈 행이 생성
+			}
+		});
 
-		setSize(590, 515);
+		deChoiceBtn = new JButton("프로세스 선택 삭제");
+		deChoiceBtn.setBackground(new Color(242, 255, 237));
+		deChoiceBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getSelectedRow();	// 선택한 행의 번호를 알려줌
+				if (row > -1) {						// -1보다 클 때 (인덱스 0부터 시작)
+					model.removeRow(row);			// 선택한 행 삭제
+				}
+			}
+		});
+
+		deLastBtn = new JButton("프로세스 마지막 줄 삭제");
+		deLastBtn.setBackground(new Color(242, 255, 237));
+		deLastBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int row = table.getRowCount();		// 행의 개수 카운트	
+				if (row > 0) {						// 0보다 클 때 마지막 인데스 삭제
+					model.removeRow(row - 1);
+				}
+			}
+		});
+
+		resultBtn = new JButton("결과 창 보기");
+		resultBtn.setBackground(new Color(242, 255, 237));
+
+		c.add(Panel);
+		c.add(Combo);
+		c.add(resetBtn);
+		c.add(addBtn);
+		c.add(deChoiceBtn);
+		c.add(deLastBtn);
+		c.add(resultBtn);
+
+		setResizable(false);	// 확장 비활성화
+		setSize(680, 515);
 		setVisible(true);
 
 	}
