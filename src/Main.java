@@ -55,7 +55,7 @@ public class Main extends JFrame {
 		button2 = new JButton("프로세스 추가");
 		button2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				model.addRow(new String[] { "", "", "", "", "", "" });
+				model.addRow(b);
 			}
 		});
 		
