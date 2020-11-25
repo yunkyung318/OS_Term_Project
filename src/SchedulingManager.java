@@ -6,6 +6,14 @@ public abstract class SchedulingManager {
 	/* private List<Event> timeflow; */		// 간트차트 그리기용 list(?)
 	private int timeQuantum;			// 시간할당량(타임슬라이스)
 	
+	public List<Process> getProcesses() {
+		return processes;
+	}
+
+	public void setProcesses(List<Process> processes) {
+		this.processes = processes;
+	}
+
 	/* Scheduling Manager 클래스의 생성자 */
 	public SchedulingManager() {
 		processes = new ArrayList();

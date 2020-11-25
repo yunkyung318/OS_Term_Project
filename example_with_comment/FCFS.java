@@ -27,10 +27,10 @@ public class FCFS extends SchedulerManage {
         
         // 이벤트 처리를 위한 리스트 생성
         // timeflow 배열의 한 원소는 차례로 프로세스 이름, 시작시간, 종료시간으로 이루어짐
-        List<Event> timeflow = this.getTimeflow();
+        List<Process> timeflow = this.getTimeflow();
         
         // 정렬된 프로세스 목록들을 불러와 하나씩 add
-        for (Row row : this.getRows()) {
+        for (Process process : this.getRows()) {
             if (timeflow.isEmpty()) {
                 timeflow.add(new Event(row.getProcessName(), row.getArrivalTime(),
                 		row.getArrivalTime() + row.getBurstTime(),row.getColor()));
