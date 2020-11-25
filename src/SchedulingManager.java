@@ -3,7 +3,7 @@ import java.util.List;
 
 public abstract class SchedulingManager {
 	private List<Process> processes;	// 프로세스들의 list
-	/* private List<Event> timeflow; */		// 간트차트 그리기용 list(?)
+	private List<Process> timeflow;		// 간트차트 그리기용 list(?)
 	private int timeQuantum;			// 시간할당량(타임슬라이스)
 	
 	public List<Process> getProcesses() {
@@ -17,7 +17,7 @@ public abstract class SchedulingManager {
 	/* Scheduling Manager 클래스의 생성자 */
 	public SchedulingManager() {
 		processes = new ArrayList();
-		// timeflow = new ArrayList();
+		timeflow = new ArrayList();
 		timeQuantum = 1; // 시간할당량(타임슬라이스)은 초기값 1로 지정
 	}
 	

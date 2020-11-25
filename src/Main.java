@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.table.*;
 
 public class Main extends JFrame {
+	private MyPanel mp = new MyPanel();
 	JTable table;
 	JScrollPane js;
 	JPanel Panel;
@@ -18,6 +19,7 @@ public class Main extends JFrame {
 	String blank[] = { "", "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
 
 	public Main() {
+
 		setTitle("test");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container c = getContentPane();
@@ -54,7 +56,7 @@ public class Main extends JFrame {
 		addBtn.setBackground(new Color(242, 255, 237));
 		addBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				model.addRow(blank);	// 프로세스 추가 시 자동으로 5열의 빈 행이 생성
+				model.addRow(blank); // 프로세스 추가 시 자동으로 5열의 빈 행이 생성
 			}
 		});
 
@@ -62,9 +64,9 @@ public class Main extends JFrame {
 		deChoiceBtn.setBackground(new Color(242, 255, 237));
 		deChoiceBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int row = table.getSelectedRow();	// 선택한 행의 번호를 알려줌
-				if (row > -1) {						// -1보다 클 때 (인덱스 0부터 시작)
-					model.removeRow(row);			// 선택한 행 삭제
+				int row = table.getSelectedRow(); // 선택한 행의 번호를 알려줌
+				if (row > -1) { // -1보다 클 때 (인덱스 0부터 시작)
+					model.removeRow(row); // 선택한 행 삭제
 				}
 			}
 		});
@@ -73,8 +75,8 @@ public class Main extends JFrame {
 		deLastBtn.setBackground(new Color(242, 255, 237));
 		deLastBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				int row = table.getRowCount();		// 행의 개수 카운트	
-				if (row > 0) {						// 0보다 클 때 마지막 인데스 삭제
+				int row = table.getRowCount(); // 행의 개수 카운트
+				if (row > 0) { // 0보다 클 때 마지막 인데스 삭제
 					model.removeRow(row - 1);
 				}
 			}
@@ -90,11 +92,33 @@ public class Main extends JFrame {
 		c.add(deChoiceBtn);
 		c.add(deLastBtn);
 		c.add(resultBtn);
+		setContentPane(mp);
 
-		setResizable(false);	// 확장 비활성화
+		setResizable(false); // 확장 비활성화
 		setSize(680, 515);
 		setVisible(true);
 
+	}
+
+	class MyPanel extends JPanel {
+		public void paintComponent(Graphics g) {
+			int x = 10;
+			int y = 40;
+			int width = 10;
+			int height = 0;
+
+			super.paintComponent(g);
+			g.setColor(Color.BLUE);
+			g.fillRect(10, 10, 15, 40);
+			g.setColor(Color.BLACK);
+			g.fillRect(60, 10, 70, 50);
+			g.setColor(Color.CYAN);
+			g.fillRect(130, 10, 30, 50);
+			g.setColor(Color.GREEN);
+			g.fillRect(160, 10, 90, 50);
+			g.setColor(Color.BLACK);
+			g.drawString("test", 195, 40);
+		}
 	}
 
 	public static void main(String[] args) {
