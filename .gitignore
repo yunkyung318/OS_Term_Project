@@ -3,6 +3,7 @@
 # Edit at https://www.toptal.com/developers/gitignore?templates=windows,macos,java,eclipse
 
 ### Eclipse ###
+.classpath
 .metadata
 bin/
 tmp/
