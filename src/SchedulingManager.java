@@ -14,8 +14,8 @@ public abstract class SchedulingManager {
     }
     
     // Process 리스트에 프로세스 추가
-    public boolean add(Process process) {
-        return processes.add(process);
+    public void add(Process process) {
+        processes.add(process);
     }
     
     // 시간할당량 설정 

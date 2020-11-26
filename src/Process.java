@@ -14,8 +14,7 @@ public class Process {
 	//private Color color;		// 색상 변수
 	
 	
-	private Process(String pid, int arriveTime, int burstTime,
-    		int priority, int waitingTime, int turnAroundTime, Color color) {
+	private Process(String pid, int arriveTime, int burstTime, int priority, int waitingTime, int turnAroundTime/*, Color color*/) {
         this.pid = pid;
         this.arriveTime = arriveTime;
         this.burstTime = burstTime;
@@ -26,12 +25,12 @@ public class Process {
     }
 
 	public Process(String pid, int arriveTime, int burstTime,
-    		int priority,Color color) {
-        this(pid, arriveTime, burstTime, priority, 0, 0, color);
+    		int priority) {
+        this(pid, arriveTime, burstTime, priority, 0, 0/*, color*/);
     }
     
     public Process(String pid, int arriveTime, int burstTime, Color color) {
-        this(pid, arriveTime, burstTime, 0, 0, 0, color);
+        this(pid, arriveTime, burstTime, 0, 0, 0/*, color*/);
     }
 	
 	// 프로세스 이름 반환
