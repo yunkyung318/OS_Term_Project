@@ -2,12 +2,12 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
+import java.util.List;
 
 public class Main extends JFrame {
-	/* private MyPanel mp = new MyPanel(); */
 
 	JTable table;
-	JScrollPane js;
+	JScrollPane js, jpanel;
 	JPanel Panel;
 	DefaultTableModel model;
 	JButton resetBtn;
@@ -16,14 +16,14 @@ public class Main extends JFrame {
 	JButton deLastBtn;
 	JButton resultBtn;
 	JComboBox<String> Combo;
-
-	private Color color[] = { Color.ORANGE, Color.cyan, Color.YELLOW, Color.MAGENTA, Color.LIGHT_GRAY, Color.gray,
-			Color.green };
+	MyPanel panel;
+	Process process;
+	ChartList chartList;
 
 	String blank[] = { "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
 
 	public Main() {
-
+		
 		setTitle("test");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container c = getContentPane();
@@ -37,6 +37,10 @@ public class Main extends JFrame {
 
 		js = new JScrollPane(table); // 프로세스가 많아지면 스크롤로 관리 가능
 		Panel.add(js);
+
+		panel = new MyPanel();
+		panel.setBackground(Color.WHITE);
+		jpanel = new JScrollPane(panel);
 
 		String choice[] = { "FCFS", "SJF", "비선점 Priority", "선점 Priority", "RR", "SRT", "HRN" };
 		Combo = new JComboBox<>();
@@ -92,41 +96,61 @@ public class Main extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String selected = (String) Combo.getSelectedItem();
 				SchedulingManager scheduling;
-				String tqSize = JOptionPane.showInputDialog("타임 슬라이스 크기(Time Quantum)");
-				
+
 				switch (selected) {
 				case "FCFS":
 					scheduling = new FCFS();
 					break;
+					
 				case "SJF":
 					scheduling = new FCFS();
 					break;
+					
 				case "PSN":
 					scheduling = new FCFS();
 					break;
+					
 				case "PSP":
 					scheduling = new FCFS();
 					break;
-				case "RR":
-					if (tqSize == null) {
-						return;
-					}
-					scheduling = new FCFS();
-					scheduling.setTimeQuantum(Integer.parseInt(tqSize));
-					break;
-				case "SRT":
-					if (tqSize == null) {
-						return;
-					}
-					scheduling = new FCFS();
-					scheduling.setTimeQuantum(Integer.parseInt(tqSize));
-					break;
+					
 				case "HRN":
 					scheduling = new FCFS();
 					break;
+					
+				case "RR":
+					String tqSize = JOptionPane.showInputDialog("타임 슬라이스 크기(Time Quantum)");
+					if (tqSize == null) {
+						return;
+					}
+					scheduling = new FCFS();
+					scheduling.setTimeQuantum(Integer.parseInt(tqSize));
+					break;
+					
+				case "SRT":
+					String stqSize = JOptionPane.showInputDialog("타임 슬라이스 크기(Time Quantum)");
+					if (stqSize == null) {
+						return;
+					}
+					scheduling = new FCFS();
+					scheduling.setTimeQuantum(Integer.parseInt(stqSize));
+					break;
+
 				default:
 					return;
 				}
+				
+				for (int i = 0; i < model.getRowCount(); i++) {
+					String pid = (String) model.getValueAt(i, 0);
+					int arrive = Integer.parseInt((String) model.getValueAt(i, 1));
+					int burst = Integer.parseInt((String) model.getValueAt(i, 2));
+					int priority = Integer.parseInt((String) model.getValueAt(i, 3));
+					process = new Process(pid, arrive, burst, priority);
+					scheduling.addProcess(process);
+				}
+
+				scheduling.scheduling();
+				panel.setTimeQuantum(scheduling.getCLists());
 			}
 		});
 
@@ -137,24 +161,36 @@ public class Main extends JFrame {
 		c.add(deChoiceBtn);
 		c.add(deLastBtn);
 		c.add(resultBtn);
-		/* setContentPane(mp); */
 
 		setResizable(false); // 확장 비활성화
 		setSize(680, 515);
 		setVisible(true);
-
 	}
 
 	class MyPanel extends JPanel {
-		public void paintComponent(Graphics g) {
-			int x = 10;
-			int y = 40;
-			int width = 10;
-			int height = 40;
+		private List<ChartList> list;
 
-			super.paintComponent(g);
-			g.setColor(Color.BLUE);
-			g.fillRect(10, 10, 50, 40);
+		public void paintComponent(Graphics g) {
+
+			for (int i = 0; i < list.size(); i++) {
+				int x = 10;
+				int y = 20; // 고정
+				int width = (chartList.getpFinish() - chartList.getpStart()) * 10; // 곱하기 초해서 크기 조정
+				int height = 60; // 고정
+
+				super.paintComponent(g);
+
+				g.setColor(chartList.getColor());
+				g.drawRect(x, y, width, height);
+
+				g.setColor(Color.BLACK);
+				g.drawString(chartList.getPid(), (x + width) / 2, (y + height) / 2);
+			}
+		}
+
+		public void setTimeQuantum(List<ChartList> list) {
+			this.list = list;
+			repaint();
 		}
 	}
 
