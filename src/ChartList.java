@@ -25,7 +25,7 @@ public class ChartList {
 	}
     
     // 종료시간 반환
-	public int pFinish() {
+	public int getpFinish() {
 		return pFinish;
 	}
 
