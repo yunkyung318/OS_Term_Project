@@ -1,11 +1,11 @@
-
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.*;
 
 public class Main extends JFrame {
-	private MyPanel mp = new MyPanel();
+	/* private MyPanel mp = new MyPanel(); */
+
 	JTable table;
 	JScrollPane js;
 	JPanel Panel;
@@ -15,8 +15,12 @@ public class Main extends JFrame {
 	JButton deChoiceBtn;
 	JButton deLastBtn;
 	JButton resultBtn;
+	JComboBox<String> Combo;
 
-	String blank[] = { "", "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
+	private Color color[] = { Color.ORANGE, Color.cyan, Color.YELLOW, Color.MAGENTA, Color.LIGHT_GRAY, Color.gray,
+			Color.green };
+
+	String blank[] = { "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
 
 	public Main() {
 
@@ -25,7 +29,7 @@ public class Main extends JFrame {
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
 
-		String ment[] = { "프로세스ID", "도착시간", "서비스시간", "우선순위", "시간할당량" };
+		String ment[] = { "프로세스ID", "도착시간", "서비스시간", "우선순위" };
 
 		model = new DefaultTableModel(ment, 0); // DefaultTableModel을 통해 table안
 		table = new JTable(model); // 메모리 손상없이 삽입,삭제가 자유로움
@@ -35,7 +39,7 @@ public class Main extends JFrame {
 		Panel.add(js);
 
 		String choice[] = { "FCFS", "SJF", "비선점 Priority", "선점 Priority", "RR", "SRT", "HRN" };
-		JComboBox<String> Combo = new JComboBox<>();
+		Combo = new JComboBox<>();
 		for (int i = 0; i < choice.length; i++) {
 			Combo.addItem(choice[i]);
 		} // combo 박스를 이용해 스케줄링 방법을 리스트 구현
@@ -84,6 +88,47 @@ public class Main extends JFrame {
 
 		resultBtn = new JButton("결과 창 보기");
 		resultBtn.setBackground(new Color(242, 255, 237));
+		resultBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				String selected = (String) Combo.getSelectedItem();
+				SchedulingManager scheduling;
+				String tqSize = JOptionPane.showInputDialog("타임 슬라이스 크기(Time Quantum)");
+				
+				switch (selected) {
+				case "FCFS":
+					scheduling = new FCFS();
+					break;
+				case "SJF":
+					scheduling = new FCFS();
+					break;
+				case "PSN":
+					scheduling = new FCFS();
+					break;
+				case "PSP":
+					scheduling = new FCFS();
+					break;
+				case "RR":
+					if (tqSize == null) {
+						return;
+					}
+					scheduling = new FCFS();
+					scheduling.setTimeQuantum(Integer.parseInt(tqSize));
+					break;
+				case "SRT":
+					if (tqSize == null) {
+						return;
+					}
+					scheduling = new FCFS();
+					scheduling.setTimeQuantum(Integer.parseInt(tqSize));
+					break;
+				case "HRN":
+					scheduling = new FCFS();
+					break;
+				default:
+					return;
+				}
+			}
+		});
 
 		c.add(Panel);
 		c.add(Combo);
@@ -92,7 +137,7 @@ public class Main extends JFrame {
 		c.add(deChoiceBtn);
 		c.add(deLastBtn);
 		c.add(resultBtn);
-		setContentPane(mp);
+		/* setContentPane(mp); */
 
 		setResizable(false); // 확장 비활성화
 		setSize(680, 515);
@@ -105,19 +150,11 @@ public class Main extends JFrame {
 			int x = 10;
 			int y = 40;
 			int width = 10;
-			int height = 0;
+			int height = 40;
 
 			super.paintComponent(g);
 			g.setColor(Color.BLUE);
-			g.fillRect(10, 10, 15, 40);
-			g.setColor(Color.BLACK);
-			g.fillRect(60, 10, 70, 50);
-			g.setColor(Color.CYAN);
-			g.fillRect(130, 10, 30, 50);
-			g.setColor(Color.GREEN);
-			g.fillRect(160, 10, 90, 50);
-			g.setColor(Color.BLACK);
-			g.drawString("test", 195, 40);
+			g.fillRect(10, 10, 50, 40);
 		}
 	}
 
