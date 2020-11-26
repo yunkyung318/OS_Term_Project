@@ -1,83 +1,128 @@
+import java.awt.Color;
 
 public class Process {
 	private String pid; 		// 프로세스 이름 v
 	private int arriveTime; 	// 도착 시간 v
-	private int returnTime; 	// 종료 시간 
+	private int returnTime; 	// 종료 시간
+	
 	private int waitingTime; 	// 대기 시간
 	private int responseTime;	// 응답 시간
 	private int burstTime; 		// 실행 시간 v
 	private int turnAroundTime; // 반환 시간
 	private int priority; 		// 우선 순위 v
-
-	public Process(String pid,int arriveTime, int burstTime,int priority) {
-		this.pid=pid;
-		this.arriveTime=arriveTime;
-		this.burstTime=burstTime;
-		this.priority=priority;
-	}
 	
-	public String getPid() {	// 프로세스 이름 반환
+	//private Color color;		// 색상 변수
+	
+	
+	private Process(String pid, int arriveTime, int burstTime,
+    		int priority, int waitingTime, int turnAroundTime, Color color) {
+        this.pid = pid;
+        this.arriveTime = arriveTime;
+        this.burstTime = burstTime;
+        this.priority = priority;
+        this.waitingTime = waitingTime;
+        this.turnAroundTime = turnAroundTime;
+        //this.color = color;
+    }
+
+	public Process(String pid, int arriveTime, int burstTime,
+    		int priority,Color color) {
+        this(pid, arriveTime, burstTime, priority, 0, 0, color);
+    }
+    
+    public Process(String pid, int arriveTime, int burstTime, Color color) {
+        this(pid, arriveTime, burstTime, 0, 0, 0, color);
+    }
+	
+	// 프로세스 이름 반환
+	public String getPid() {
 		return pid;
 	}
 
-	public void setPid(String pid) {	// 프로세스 이름 설정
+	// 프로세스 이름 설정
+	public void setPid(String pid) {
 		this.pid = pid;
 	}
 
-	public int getArriveTime() {	// 도착 시간 반환
+	// 도착 시간 반환
+	public int getArriveTime() {
 		return arriveTime;
 	}
 
-	public void setArriveTime(int arriveTime) {	// 도착 시간 설정
+	// 도착 시간 설정
+	public void setArriveTime(int arriveTime) {
 		this.arriveTime = arriveTime;
 	}
 
-	public int getReturnTime() {	// 종료 시간 반환
+	// 종료 시간 반환
+	public int getReturnTime() {
 		return returnTime;
 	}
 
-	public void setReturnTime(int returnTime) {	// 종료 시간 설정
+	// 종료 시간 설정
+	public void setReturnTime(int returnTime) {
 		this.returnTime = returnTime;
 	}
 
-	public int getWaitingTime() {	// 대기 시간 반환
+	// 대기 시간 반환
+	public int getWaitingTime() {
 		return waitingTime;
 	}
 
-	public void setWaitingTime(int waitingTime) {	// 대기 시간 설정
+	// 대기 시간 설정
+	public void setWaitingTime(int waitingTime) {
 		this.waitingTime = waitingTime;
 	}
 
-	public int getResponseTime() {	// 응답 시간 반환
+	// 응답 시간 반환
+	public int getResponseTime() {
 		return responseTime;
 	}
 
-	public void setResponseTime(int responseTime) {	// 응답 시간 설정
+	// 응답 시간 설정
+	public void setResponseTime(int responseTime) {
 		this.responseTime = responseTime;
 	}
 
-	public int getBurstTime() {	// 실행 시간 반환
+	// 실행 시간 반환
+	public int getBurstTime() {
 		return burstTime;
 	}
 
-	public void setBurstTime(int burstTime) {	// 실행 시간 설정
+	// 실행 시간 설정
+	public void setBurstTime(int burstTime) {
 		this.burstTime = burstTime;
 	}
 
-	public int getTurnAroundTime() {	// 반환 시간 반환
+	// 반환 시간 반환
+	public int getTurnAroundTime() {
 		return turnAroundTime;
 	}
 
-	public void setTurnAroundTime(int turnAroundTime) {	// 반환 시간 설정
+	// 반환 시간 설정
+	public void setTurnAroundTime(int turnAroundTime) {
 		this.turnAroundTime = turnAroundTime;
 	}
 
-	public int getPriority() {	// 우선 순위 반환
+	// 우선 순위 반환
+	public int getPriority() {
 		return priority;
 	}
 
-	public void setPriority(int priority) {	// 우선 순위 설정
+	// 우선 순위 설정
+	public void setPriority(int priority) {
 		this.priority = priority;
 	}
-
+	
+	/*
+	// 색상 반환
+	public Color getColor() {
+    	return this.color;
+    }
+	
+	// 색상 설정
+	public void setColor(Color color) {
+    	this.color = color;
+    }
+    */
 }

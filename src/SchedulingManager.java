@@ -2,59 +2,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SchedulingManager {
-	private List<Process> processes;	// 프로세스들의 list
-	private List<Process> schedulingList;		// 간트차트 그리기용 list
-	private int timeQuantum;			// 시간할당량(타임슬라이스)
-	
-	public List<Process> getProcesses() {
-		return processes;
-	}
-
-	public void setProcesses(List<Process> processes) {
-		this.processes = processes;
-	}
-
-	/* Scheduling Manager 클래스의 생성자 */
-	public SchedulingManager() {
-		processes = new ArrayList();
-		timeflow = new ArrayList();
-		timeQuantum = 1; // 시간할당량(타임슬라이스)은 초기값 1로 지정
-	}
-	
-	/* 시간할당량(타임슬라이스) setter */
-	public void setTimeQuantum(int timeQuantum) {
-		this.timeQuantum = timeQuantum;
-	}
-	
-	/* 시간할당량(타임슬라이스) getter */
-	public int getTimeQuantum() {
-		return this.timeQuantum;
-	}
-	
-	/* AWT(평균 대기 시간) getter */
-	public double getAvgWaitingTime() {
-		double avg = 0.0;
-		
-		for (Process process : processes) {
-			avg += process.getWaitingTime();
-		}
-		
-		return avg / processes.size(); 
-	}
-	
-	/* ART(평균 응답 시간) getter */
-	public double getAvgResponseTime() {
+	private final List<Process> processes;	// Process들의 리스트
+    private final List<ChartList> cLists;	// 간트차트 그리기 전 리스트
+    private int timeQuantum;		// 시간할당량
+    
+    // SchedulingManager 생성자
+    public SchedulingManager() {
+    	this.processes = new ArrayList();
+    	this.cLists = new ArrayList();
+        timeQuantum = 1;
+    }
+    
+    // Process 리스트에 프로세스 추가
+    public boolean add(Process process) {
+        return processes.add(process);
+    }
+    
+    // 시간할당량 설정 
+    public void setTimeQuantum(int timeQuantum) {
+        this.timeQuantum = timeQuantum;
+    }
+    
+    // 시간할당량 반환
+    public int getTimeQuantum() {
+        return timeQuantum;
+    }
+    
+    // 평균 대기 시간 반환
+    public double getAverageWaitingTime() {
         double avg = 0.0;
         
         for (Process process : processes) {
-            avg += process.getResponseTime();
+            avg += process.getWaitingTime();
         }
         
         return avg / processes.size();
     }
-	
-	/* ATT(평균 반환 시간) getter */
-	public double getAvgTurnAroundTime() {
+    
+    // 평균 반환 시간 변환
+    public double getAverageTurnAroundTime() {
         double avg = 0.0;
         
         for (Process process : processes) {
@@ -63,12 +49,50 @@ public abstract class SchedulingManager {
         
         return avg / processes.size();
     }
+    
+    // 평균 응답 시간 반환
+    public double getResponseTime() {
+    	double avg = 0.0;
+    	
+    	/*
+    	평균 응답 시간 계산 코드
+    	*/
+    	
+    	return avg / processes.size();
+    }
+    
+    // 프로세스에 1:1로 대응하는 간트차트 리스트내 항목 반환
+    public ChartList getChartList(Process process) {
+        for (ChartList chartList : cLists) {
+            if (process.getPid().equals(chartList.getPid())) {
+                return chartList;
+            }
+        }
+        
+        return null;
+    }
+    
+    // 간트차트 리스트내 항목에 1:1로 대응하는 프로세스 반환
+    public Process getProcess(String chartListElement) {
+        for (Process process : processes)  {
+            if (process.getPid().equals(chartListElement)) {
+                return process;
+            }
+        }
+        
+        return null;
+    }
 
-	public List<Process> getSchedulingList() {
-		return schedulingList;
-	}
-
-	public void setSchedulingList(List<Process> schedulingList) {
-		this.schedulingList = schedulingList;
-	}
+    // Process들의 리스트 반환
+    public List<Process> getProcesses() {
+        return processes;
+    }
+    
+    // 간트차트 리스트 반환
+    public List<ChartList> getCLists() {
+        return cLists;
+    }
+    
+    // Scheduling Algorithm 내에서 scheduling시 사용할 메소드
+    public abstract void scheduling();
 }
