@@ -14,7 +14,7 @@ public abstract class SchedulingManager {
     }
     
     // Process 리스트에 프로세스 추가
-    public void add(Process process) {
+    public void addProcess(Process process) {
         processes.add(process);
     }
     
