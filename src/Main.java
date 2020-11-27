@@ -4,11 +4,10 @@ import javax.swing.*;
 import javax.swing.table.*;
 import java.util.List;
 
-public class Main extends JFrame {
-
+class InputFrame extends JFrame implements MouseListener {
 	JTable table;
 	JScrollPane js, jpanel;
-	JPanel Panel;
+	JPanel tablePanel;
 	DefaultTableModel model;
 	JButton resetBtn;
 	JButton addBtn;
@@ -20,24 +19,21 @@ public class Main extends JFrame {
 	Process process;
 	ChartList chartList;
 	MyDialog dialog;
-	
 	String blank[] = { "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
 
-	public Main() {
-		
-		setTitle("CPU 스케줄링");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		Container c = getContentPane();
-		c.setLayout(new FlowLayout());
+	InputFrame() {
+		super("CPU 스케줄링");
+		this.setVisible(true);
+		this.setLayout(new FlowLayout());
 
 		String ment[] = { "프로세스ID", "도착시간", "서비스시간", "우선순위" };
 
 		model = new DefaultTableModel(ment, 0); // DefaultTableModel을 통해 table안
 		table = new JTable(model); // 메모리 손상없이 삽입,삭제가 자유로움
-		Panel = new JPanel();
+		tablePanel = new JPanel();
 
 		js = new JScrollPane(table); // 프로세스가 많아지면 스크롤로 관리 가능
-		Panel.add(js);
+		tablePanel.add(js);
 
 		panel = new MyPanel();
 		panel.setBackground(Color.WHITE);
@@ -90,52 +86,52 @@ public class Main extends JFrame {
 				}
 			}
 		});
-		
-		dialog=new MyDialog(this,"타임슬라이스(Time Quantum)");
-		
+
+		dialog = new MyDialog(this, "타임슬라이스(Time Quantum)");
+
 		resultBtn = new JButton("결과 창 보기");
 		resultBtn.setBackground(new Color(242, 255, 237));
 		resultBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String selected = (String) Combo.getSelectedItem();
 				SchedulingManager scheduling;
-				
+
 				switch (selected) {
 				case "FCFS":
 					scheduling = new FCFS();
 					break;
-					
+
 				case "SJF":
 					scheduling = new FCFS();
 					break;
-					
+
 				case "PSN":
 					scheduling = new FCFS();
 					break;
-					
+
 				case "PSP":
 					scheduling = new FCFS();
 					break;
-					
+
 				case "HRN":
 					scheduling = new FCFS();
 					break;
-					
+
 				case "RR":
 					dialog.setVisible(true);
-					String time=dialog.getInput();
-					
+					String time = dialog.getInput();
+
 					if (time == null) {
 						return;
 					}
 					scheduling = new FCFS();
 					scheduling.setTimeQuantum(Integer.parseInt(time));
 					break;
-					
+
 				case "SRT":
 					dialog.setVisible(true);
-					String srttime=dialog.getInput();
-					
+					String srttime = dialog.getInput();
+
 					if (srttime == null) {
 						return;
 					}
@@ -146,7 +142,7 @@ public class Main extends JFrame {
 				default:
 					return;
 				}
-				
+
 				for (int i = 0; i < model.getRowCount(); i++) {
 					String pid = (String) model.getValueAt(i, 0);
 					int arrive = Integer.parseInt((String) model.getValueAt(i, 1));
@@ -161,73 +157,150 @@ public class Main extends JFrame {
 			}
 		});
 
-		c.add(Panel);
-		c.add(Combo);
-		c.add(resetBtn);
-		c.add(addBtn);
-		c.add(deChoiceBtn);
-		c.add(deLastBtn);
-		c.add(resultBtn);
+		resultBtn.addMouseListener(this);
+
+		add(tablePanel);
+		add(Combo);
+		add(resetBtn);
+		add(addBtn);
+		add(deChoiceBtn);
+		add(deLastBtn);
+		add(resultBtn);
 
 		setResizable(false); // 확장 비활성화
 		setSize(680, 515);
-		setVisible(true);
 	}
 
-	class MyPanel extends JPanel {
-		private List<ChartList> list;
+	public void mouseClicked(MouseEvent e) {
+		new OutputFrame();
+		this.setVisible(false);
+	}
 
-		public void paintComponent(Graphics g) {
+	public void mousePressed(MouseEvent e) {
+	}
 
-			for (int i = 0; i < list.size(); i++) {
-				int x = 10;
-				int y = 20; // 고정
-				int width = (chartList.getpFinish() - chartList.getpStart()) * 10; // 곱하기 초해서 크기 조정
-				int height = 60; // 고정
+	public void mouseReleased(MouseEvent e) {
+	}
 
-				super.paintComponent(g);
+	public void mouseEntered(MouseEvent e) {
+	}
 
-				g.setColor(chartList.getColor());
-				g.drawRect(x, y, width, height);
+	public void mouseExited(MouseEvent e) {
+	}
 
-				g.setColor(Color.BLACK);
-				g.drawString(chartList.getPid(), (x + width) / 2, (y + height) / 2);
+}
+
+class OutputFrame extends JFrame implements MouseListener {
+	
+	JButton returnbutton;
+	JButton exitbutton;
+	JTextField waiting;
+	JTextField avWating;
+	JTextField response;
+	JTextField avResponse;
+	JTextField returnT;
+	JTextField avReturnT;
+	
+	public OutputFrame() {
+		super("CPU 스케줄링 결과");
+		this.setVisible(true);
+		this.setLayout(new FlowLayout());
+		
+		returnbutton = new JButton("다시하기");
+		returnbutton.setBackground(new Color(242, 255, 237));
+
+		exitbutton = new JButton("종료");
+		exitbutton.setBackground(new Color(242, 255, 237));
+
+		exitbutton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
 			}
-		}
+		});
+		waiting=new JTextField();
+		JTextField avWating;
+		JTextField response;
+		JTextField avResponse;
+		JTextField returnT;
+		JTextField avReturnT;
+		add(new JLabel("각 프로세스 별 대기 시간"));
+		
+		
+	}
 
-		public void setTimeQuantum(List<ChartList> list) {
-			this.list = list;
-			repaint();
+	public void mouseClicked(MouseEvent e) {
+	}
+
+	public void mousePressed(MouseEvent e) {
+	}
+
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	public void mouseExited(MouseEvent e) {
+	}
+}
+
+class MyPanel extends JPanel {
+	private List<ChartList> list;
+
+	public void paintComponent(Graphics g) {
+
+		for (int i = 0; i < list.size(); i++) {
+			int x = 10;
+			int y = 20; // 고정
+			int width = (chartList.getpFinish() - chartList.getpStart()) * 10; // 곱하기 초해서 크기 조정
+			int height = 60; // 고정
+
+			super.paintComponent(g);
+
+			g.setColor(chartList.getColor());
+			g.drawRect(x, y, width, height);
+
+			g.setColor(Color.BLACK);
+			g.drawString(chartList.getPid(), (x + width) / 2, (y + height) / 2);
 		}
 	}
-	
-	public class MyDialog extends JDialog{
-		private JTextField text=new JTextField(10);
-		private JButton okbutton=new JButton("OK");
-		
-		public MyDialog(JFrame frame,String title) {
-			super(frame,title,true);
-			setLayout(new FlowLayout());
-			add(text);
-			add(okbutton);
-			setSize(200,100);
-			
-			okbutton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					setVisible(false);
-				}
-			});
-		}
-		
-		public String getInput() {
-			if(text.getText().length()==0) return null;
-			else return text.getText();
-		}
-		
+
+	public void setTimeQuantum(List<ChartList> list) {
+		this.list = list;
+		repaint();
 	}
-	
+}
+
+class MyDialog extends JDialog {
+	private JTextField text = new JTextField(10);
+	private JButton okbutton = new JButton("OK");
+
+	public MyDialog(JFrame frame, String title) {
+		super(frame, title, true);
+		setLayout(new FlowLayout());
+		add(text);
+		add(okbutton);
+		setSize(200, 100);
+
+		okbutton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setVisible(false);
+			}
+		});
+	}
+
+	public String getInput() {
+		if (text.getText().length() == 0)
+			return null;
+		else
+			return text.getText();
+	}
+
+}
+
+public class Main extends JFrame {
 	public static void main(String[] args) {
-		new Main();
+		new InputFrame();
 	}
 
 }
