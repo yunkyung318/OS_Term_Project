@@ -2,9 +2,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NP extends SchedulingManager {
+public class NPRE extends SchedulingManager {
 	@Override
     public void scheduling() {
+		// 일단은 프로세스 리스트를 도착시간 기준으로 정렬
         Collections.sort(this.getProcesses(), (Object o1, Object o2) -> {
             if (((Process) o1).getArriveTime() == ((Process) o2).getArriveTime()) {
                 return 0;
@@ -19,23 +20,24 @@ public class NP extends SchedulingManager {
         
         List<Process> processes = Copy.listCopy(this.getProcesses());
         
-        // 한번에 가져올 프로세스 갯수를 정하기 위한 시간
-        // 처음엔 첫번째 프로세스의 도착시간(0초)으로 초기화
+        // time : 현재 Scheduling 중 흐르는 현재 시간
+        // 초기값은 첫 프로세스의 도착시간인 0으로 설정
         int time = processes.get(0).getArriveTime();
         
+        // 프로세스 리스트에서 하나씩 삭제할 예정이므로 프로세스 리스트에 데이터가 있는 동안 반복
         while (!processes.isEmpty()) {
-        	// 한번에 가져온 사용 가능한 프로세스들 리스트 생성
-            List<Process> availableProcesses = new ArrayList();
+        	// 프로세스들이 기다리고 있는 Ready Queue
+            List<Process> readyQueue = new ArrayList();
             
             // 처음엔 첫 프로세스의 도착시간으로 초기화 했기에, 첫 프로세스 하나만 가져옴
             for (Process process : processes) {
                 if (process.getArriveTime() <= time) {
-                	availableProcesses.add(process);
+                	readyQueue.add(process);
                 }
             }
             
-            // 프로세스 리스트를 우선순위가 높은 순서로 정렬
-            Collections.sort(availableProcesses, (Object o1, Object o2) -> {
+            // Ready Queue에서 다음에 사용할 프로세스를 가져오기 쉽게 우선순위가 높은 순서로 정렬
+            Collections.sort(readyQueue, (Object o1, Object o2) -> {
                 if (((Process) o1).getPriority() == ((Process) o2).getPriority()) {
                     return 0;
                 }
@@ -47,12 +49,14 @@ public class NP extends SchedulingManager {
                 }
             });
             
-            // 사용 가능한 프로세스 리스트에서 첫 번째 프로세스를 가져옴
-            Process process = availableProcesses.get(0);
+            // 앞서 정렬된 Ready Queue에서 첫 번째 프로세스를 가져옴
+            Process process = readyQueue.get(0);
             
-            // 간트차트 리스트에 방금 가져온 프로세스를 삽입
+            // 간트차트 리스트에 Ready Queue에서 첫 번째 프로세스를 가져와서 삽입
             this.getCLists().add(new ChartList(process.getPid(), time, time + process.getBurstTime(), process.getColor()));
-            // 한번에 가져올 기준 시간을 앞선 프로세스까지의 실행 시간만큼 증가
+            
+            // 비선점 알고리즘이므로 시간이 1씩 증가하면서 상황을 볼 필요가 X
+            // 따라서, 시간을 실행시간만큼 더해 시간을 건너뜀
             time += process.getBurstTime();
             
             // 기존 프로세스들 리스트에서 해당 수행 완료한 프로세스 삭제 
