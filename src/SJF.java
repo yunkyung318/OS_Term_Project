@@ -27,18 +27,18 @@ public class SJF extends SchedulingManager {
         int time = processes.get(0).getArriveTime();
         
         while (!processes.isEmpty()) {
-        	// 한번에 가져온 사용 가능한 프로세스들 리스트 생성
-            List<Process> availableProcesses = new ArrayList();
+        	// 프로세스들이 기다리고 있는 Ready Queue
+            List<Process> readyQueue = new ArrayList();
             
             // 처음엔 첫 프로세스의 도착시간으로 초기화 했기에, 첫 프로세스 하나만 가져옴
             for (Process process : processes) {
                 if (process.getArriveTime() <= time) {
-                	availableProcesses.add(process);
+                	readyQueue.add(process);
                 }
             }
             
-            // 프로세스 리스트를 실행 시간이 짧은 기준으로 정렬
-            Collections.sort(availableProcesses, (Object o1, Object o2) -> {
+            // Ready Queue에서 다음에 사용할 프로세스를 가져오기 쉽게 실행 시간이 짧은 기준으로 정렬
+            Collections.sort(readyQueue, (Object o1, Object o2) -> {
                 if (((Process) o1).getBurstTime() == ((Process) o2).getBurstTime()) {
                     return 0;
                 }
@@ -50,12 +50,14 @@ public class SJF extends SchedulingManager {
                 }
             });
             
-            // 사용 가능한 프로세스 리스트에서 첫 번째 프로세스를 가져옴
-            Process process = availableProcesses.get(0);
+            // 앞서 정렬된 Ready Queue에서 첫 번째 프로세스를 가져옴
+            Process process = readyQueue.get(0);
             
-            // 간트차트 리스트에 방금 가져온 프로세스를 삽입
+            // 간트차트 리스트에 Ready Queue에서 첫 번째 프로세스를 가져와서 삽입
             this.getCLists().add(new ChartList(process.getPid(), time, time + process.getBurstTime(), process.getColor()));
-            // 한번에 가져올 기준 시간을 앞선 프로세스까지의 실행 시간만큼 증가
+            
+            // 비선점 알고리즘이므로 시간이 1씩 증가하면서 상황을 볼 필요가 X
+            // 따라서, 시간을 실행시간만큼 더해 시간을 건너뜀
             time += process.getBurstTime();
             
             // 기존 프로세스들 리스트에서 해당 수행 완료한 프로세스 삭제 
