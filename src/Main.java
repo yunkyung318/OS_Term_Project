@@ -24,7 +24,7 @@ public class Main extends JFrame {
 
 	public Main() {
 		
-		setTitle("test");
+		setTitle("CPU 스케줄링");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Container c = getContentPane();
 		c.setLayout(new FlowLayout());
