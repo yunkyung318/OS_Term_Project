@@ -19,7 +19,8 @@ public class Main extends JFrame {
 	MyPanel panel;
 	Process process;
 	ChartList chartList;
-
+	MyDialog dialog;
+	
 	String blank[] = { "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
 
 	public Main() {
@@ -89,14 +90,16 @@ public class Main extends JFrame {
 				}
 			}
 		});
-
+		
+		dialog=new MyDialog(this,"타임슬라이스(Time Quantum)");
+		
 		resultBtn = new JButton("결과 창 보기");
 		resultBtn.setBackground(new Color(242, 255, 237));
 		resultBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				String selected = (String) Combo.getSelectedItem();
 				SchedulingManager scheduling;
-
+				
 				switch (selected) {
 				case "FCFS":
 					scheduling = new FCFS();
@@ -119,21 +122,25 @@ public class Main extends JFrame {
 					break;
 					
 				case "RR":
-					String tqSize = JOptionPane.showInputDialog("타임 슬라이스 크기(Time Quantum)");
-					if (tqSize == null) {
+					dialog.setVisible(true);
+					String time=dialog.getInput();
+					
+					if (time == null) {
 						return;
 					}
 					scheduling = new FCFS();
-					scheduling.setTimeQuantum(Integer.parseInt(tqSize));
+					scheduling.setTimeQuantum(Integer.parseInt(time));
 					break;
 					
 				case "SRT":
-					String stqSize = JOptionPane.showInputDialog("타임 슬라이스 크기(Time Quantum)");
-					if (stqSize == null) {
+					dialog.setVisible(true);
+					String srttime=dialog.getInput();
+					
+					if (srttime == null) {
 						return;
 					}
 					scheduling = new FCFS();
-					scheduling.setTimeQuantum(Integer.parseInt(stqSize));
+					scheduling.setTimeQuantum(Integer.parseInt(srttime));
 					break;
 
 				default:
@@ -193,7 +200,32 @@ public class Main extends JFrame {
 			repaint();
 		}
 	}
-
+	
+	public class MyDialog extends JDialog{
+		private JTextField text=new JTextField(10);
+		private JButton okbutton=new JButton("OK");
+		
+		public MyDialog(JFrame frame,String title) {
+			super(frame,title,true);
+			setLayout(new FlowLayout());
+			add(text);
+			add(okbutton);
+			setSize(200,100);
+			
+			okbutton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setVisible(false);
+				}
+			});
+		}
+		
+		public String getInput() {
+			if(text.getText().length()==0) return null;
+			else return text.getText();
+		}
+		
+	}
+	
 	public static void main(String[] args) {
 		new Main();
 	}
