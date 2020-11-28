@@ -167,7 +167,7 @@ public class Main extends JFrame {
 					if (srttime == null) {
 						return;
 					}
-					scheduling = new RR();
+					scheduling = new SRT();
 					scheduling.setTimeQuantum(Integer.parseInt(srttime));
 					break;
 
