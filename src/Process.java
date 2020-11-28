@@ -118,4 +118,8 @@ public class Process {
 	public void setColor(Color color) {
     	this.color = color;
     }
+	
+	public double getHRNCalc() {
+    	return ((this.getWaitingTime()+this.getBurstTime())/this.getBurstTime());
+    }
 }
