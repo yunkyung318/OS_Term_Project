@@ -5,19 +5,30 @@ import javax.swing.table.*;
 import java.util.List;
 
 public class Main extends JFrame {
+	JPanel framePanel;
 
 	JTable table;
-	JScrollPane js, jpanel;
-	JPanel framePanel;
+	JTable resulttable;
+
+	JScrollPane js;
+	JScrollPane resultPane;
+	JScrollPane chartPane;
+
 	DefaultTableModel model;
+	DefaultTableModel resultmodel;
+
 	JButton resetBtn;
 	JButton addBtn;
 	JButton deChoiceBtn;
 	JButton deLastBtn;
 	JButton resultBtn;
+
 	JComboBox<String> Combo;
-	MyPanel panel;
-	Process process;
+
+	JButton returnBtn;
+	JButton exitBtn;
+
+	MyPanel drawChart;
 
 	String blank[] = { "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
 
@@ -27,20 +38,13 @@ public class Main extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		String ment[] = { "프로세스ID", "도착시간", "서비스시간", "우선순위" };
-
 		model = new DefaultTableModel(ment, 0); // DefaultTableModel을 통해 table안
+
 		table = new JTable(model); // 메모리 손상없이 삽입,삭제가 자유로움
 		table.setFillsViewportHeight(true);
 
-		framePanel = new JPanel();
-
 		js = new JScrollPane(table); // 프로세스가 많아지면 스크롤로 관리 가능
 		js.setBounds(10, 25, 540, 250);
-
-		panel = new MyPanel();
-		panel.setBackground(Color.WHITE);
-		jpanel = new JScrollPane(panel);
-		jpanel.setBounds(10, 300, 600, 100);
 
 		String choice[] = { "FCFS", "SJF", "비선점 Priority", "선점 Priority", "RR", "SRT", "HRN" };
 		Combo = new JComboBox<>();
@@ -95,6 +99,18 @@ public class Main extends JFrame {
 			}
 		});
 
+		drawChart = new MyPanel();
+		drawChart.setBackground(Color.WHITE);
+		chartPane = new JScrollPane(drawChart);
+		chartPane.setBounds(10, 320, 650, 100);
+
+		resultmodel = new DefaultTableModel(
+				new String[] { "PID", "대기시간", "평균 대기시간", "응답시간", "평균 응답시간", "반환시간", "평균 반환시간" }, 0);
+		resulttable = new JTable(resultmodel);
+		resulttable.setFillsViewportHeight(true);
+		resultPane = new JScrollPane(resulttable);
+		resultPane.setBounds(10, 430, 550, 300);
+
 		resultBtn = new JButton("결과 보기");
 		resultBtn.setBackground(new Color(242, 255, 237));
 		resultBtn.setBounds(560, 280, 100, 25);
@@ -103,42 +119,55 @@ public class Main extends JFrame {
 				String selected = (String) Combo.getSelectedItem();
 				SchedulingManager scheduling;
 
+				framePanel.add(resultPane);
+				framePanel.add(returnBtn);
+				framePanel.add(exitBtn);
+
+				resetBtn.setEnabled(false);
+				addBtn.setEnabled(false);
+				deChoiceBtn.setEnabled(false);
+				deLastBtn.setEnabled(false);
+				resultBtn.setEnabled(false);
+
+				returnBtn.setEnabled(true);
+				exitBtn.setEnabled(true);
+
 				switch (selected) {
 				case "FCFS":
 					scheduling = new FCFS();
 					break;
 
 				case "SJF":
-					scheduling = new FCFS();
+					scheduling = new SJF();
 					break;
 
-				case "PSN":
-					scheduling = new FCFS();
+				case "비선점 Priority":
+					scheduling = new NPRE();
 					break;
 
-				case "PSP":
-					scheduling = new FCFS();
+				case "선점 Priority":
+					scheduling = new PRE();
 					break;
 
 				case "HRN":
-					scheduling = new FCFS();
+					scheduling = new RR();
 					break;
 
 				case "RR":
-					String time=JOptionPane.showInputDialog("타임 슬라이스 (Time Quantum)");
+					String time = JOptionPane.showInputDialog("타임 슬라이스 (Time Quantum)");
 					if (time == null) {
 						return;
 					}
-					scheduling = new FCFS();
+					scheduling = new RR();
 					scheduling.setTimeQuantum(Integer.parseInt(time));
 					break;
 
 				case "SRT":
-					String srttime=JOptionPane.showInputDialog("타임 슬라이스 (Time Quantum)");
+					String srttime = JOptionPane.showInputDialog("타임 슬라이스 (Time Quantum)");
 					if (srttime == null) {
 						return;
 					}
-					scheduling = new FCFS();
+					scheduling = new RR();
 					scheduling.setTimeQuantum(Integer.parseInt(srttime));
 					break;
 
@@ -146,19 +175,62 @@ public class Main extends JFrame {
 					return;
 				}
 
+				for (int i = 0; i <= model.getRowCount(); i++) {
+					resultmodel.addRow(blank);
+				}
+
 				for (int i = 0; i < model.getRowCount(); i++) {
 					String pid = (String) model.getValueAt(i, 0);
 					int arrive = Integer.parseInt((String) model.getValueAt(i, 1));
 					int burst = Integer.parseInt((String) model.getValueAt(i, 2));
 					int priority = Integer.parseInt((String) model.getValueAt(i, 3));
-					process = new Process(pid, arrive, burst, priority);
-					scheduling.addProcess(process);
+					scheduling.addProcess(new Process(pid, arrive, burst, priority));
 				}
 
 				scheduling.scheduling();
-				panel.setTimeQuantum(scheduling.getCLists());
+
+				for (int i = 0; i < model.getRowCount(); i++) {
+					String pid = (String) model.getValueAt(i, 0);
+					Process process = scheduling.getProcess(pid);
+					resultmodel.setValueAt(pid, i, 0);
+					resultmodel.setValueAt(process.getArriveTime(), i, 1);
+					resultmodel.setValueAt(process.getResponseTime(), i, 3);
+					resultmodel.setValueAt(process.getTurnAroundTime(), i, 5);
+				}
+
+				drawChart.setTimeQuantum(scheduling.getCLists());
 			}
 		});
+
+		returnBtn = new JButton("다시하기");
+		returnBtn.setBounds(570, 665, 100, 25);
+		returnBtn.setBackground(new Color(242, 255, 237));
+		returnBtn.setEnabled(false);
+		returnBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				for (int i = resultmodel.getRowCount() - 1; i > -1; i--) {
+					resultmodel.removeRow(i);
+				}
+				resetBtn.setEnabled(true);
+				addBtn.setEnabled(true);
+				deChoiceBtn.setEnabled(true);
+				deLastBtn.setEnabled(true);
+				resultBtn.setEnabled(true);
+				returnBtn.setEnabled(false);
+				exitBtn.setEnabled(false);
+			}
+		});
+
+		exitBtn = new JButton("종료");
+		exitBtn.setBounds(570, 700, 100, 25);
+		exitBtn.setBackground(new Color(242, 255, 237));
+		exitBtn.setEnabled(false);
+		exitBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				System.exit(0);
+			}
+		});
+
 		framePanel = new JPanel(null);
 		framePanel.add(js);
 		framePanel.add(Combo);
@@ -167,6 +239,8 @@ public class Main extends JFrame {
 		framePanel.add(deChoiceBtn);
 		framePanel.add(deLastBtn);
 		framePanel.add(resultBtn);
+		framePanel.add(chartPane);
+
 		/* framePanel.add(panel); */
 
 		setSize(700, 800);
@@ -179,37 +253,37 @@ public class Main extends JFrame {
 
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
+			if (list != null) {
+				for (int i = 0; i < list.size(); i++) {
+					ChartList chartList = list.get(i);
 
-			for (int i = 0; i < list.size(); i++) {
-				ChartList chartList = list.get(i);
+					int width = (chartList.getpFinish() - chartList.getpStart()) * 20; // 곱하기 초해서 크기 조정
+					int height = 30; // 고정
+					int x = 10;
+					int y = 20; // 고정
 
-				int width = (chartList.getpFinish() - chartList.getpStart()) * 20; // 곱하기 초해서 크기 조정
-				int height = 30; // 고정
-				int x = 10;
-				int y = 20; // 고정
-				
-				if (i / model.getRowCount() == 0) {
+					if (i / model.getRowCount() == 0) {
+						g.setColor(chartList.getColor());
+						g.drawRect(x, y, 10, 10);
+						g.fillRect(x, y, 10, 10);
+						g.setColor(Color.black);
+						g.drawString(chartList.getPid(), (x + width) / 2, (y + height) / 2);
+					}
+
 					g.setColor(chartList.getColor());
 					g.drawRect(x, y, 10, 10);
 					g.fillRect(x, y, 10, 10);
 					g.setColor(Color.black);
-					g.drawString(chartList.getPid(), (x+width)/2, (y+height)/2);
-				}
+					g.drawString(chartList.getPid(), (x + width) / 2, (y + height) / 2);
+					g.drawString(Integer.toString(chartList.getpStart()), x - width, y - 5);
+					g.setColor(chartList.getColor());
 
-				g.setColor(chartList.getColor());
-				g.drawRect(x, y, 10, 10);
-				g.fillRect(x, y, 10, 10);
-				g.setColor(Color.black);
-				g.drawString(chartList.getPid(), (x+width)/2, (y+height)/2);
-				g.drawString(Integer.toString(chartList.getpStart()), x-width, y-5);
-				g.setColor(chartList.getColor());
-				
-				x+=width;
-				
-				if (i == list.size() - 1)
-                {
-                    g.drawString(Integer.toString(chartList.getpFinish()), x-width , y -5);
-                }
+					x += width;
+
+					if (i == list.size() - 1) {
+						g.drawString(Integer.toString(chartList.getpFinish()), x - width, y - 5);
+					}
+				}
 			}
 		}
 
