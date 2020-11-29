@@ -150,7 +150,7 @@ public class Main extends JFrame {
 					break;
 
 				case "HRN":
-					scheduling = new RR();
+					scheduling = new HRN();
 					break;
 
 				case "RR":
@@ -193,7 +193,7 @@ public class Main extends JFrame {
 					String pid = (String) model.getValueAt(i, 0);
 					Process process = scheduling.getProcess(pid);
 					resultmodel.setValueAt(pid, i, 0);
-					resultmodel.setValueAt(process.getArriveTime(), i, 1);
+					resultmodel.setValueAt(process.getWaitingTime(), i, 1);
 					resultmodel.setValueAt(process.getResponseTime(), i, 3);
 					resultmodel.setValueAt(process.getTurnAroundTime(), i, 5);
 				}
