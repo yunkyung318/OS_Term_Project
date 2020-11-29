@@ -54,9 +54,9 @@ public abstract class SchedulingManager {
     public double getResponseTime() {
     	double avg = 0.0;
     	
-    	/*
-    	평균 응답 시간 계산 코드
-    	*/
+    	for (Process process : processes) {
+    		avg += process.getResponseTime();
+    	}
     	
     	return avg / processes.size();
     }

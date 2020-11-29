@@ -31,6 +31,7 @@ public class Main extends JFrame {
 	MyPanel drawChart;
 
 	String blank[] = { "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
+	int X = 20;
 
 	public Main() {
 
@@ -102,7 +103,7 @@ public class Main extends JFrame {
 		drawChart = new MyPanel();
 		drawChart.setBackground(Color.WHITE);
 		chartPane = new JScrollPane(drawChart);
-		chartPane.setBounds(10, 320, 650, 100);
+		chartPane.setBounds(10, 320, 800,100);
 
 		resultmodel = new DefaultTableModel(
 				new String[] { "PID", "대기시간", "평균 대기시간", "응답시간", "평균 응답시간", "반환시간", "평균 반환시간" }, 0);
@@ -118,10 +119,6 @@ public class Main extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String selected = (String) Combo.getSelectedItem();
 				SchedulingManager scheduling;
-
-				framePanel.add(resultPane);
-				framePanel.add(returnBtn);
-				framePanel.add(exitBtn);
 
 				resetBtn.setEnabled(false);
 				addBtn.setEnabled(false);
@@ -198,6 +195,10 @@ public class Main extends JFrame {
 					resultmodel.setValueAt(process.getTurnAroundTime(), i, 5);
 				}
 
+				resultmodel.setValueAt(scheduling.getAverageWaitingTime(), model.getRowCount(), 2);
+				resultmodel.setValueAt(scheduling.getResponseTime(), model.getRowCount(), 4);
+				resultmodel.setValueAt(scheduling.getAverageTurnAroundTime(), model.getRowCount(), 6);
+
 				drawChart.setTimeQuantum(scheduling.getCLists());
 			}
 		});
@@ -240,10 +241,12 @@ public class Main extends JFrame {
 		framePanel.add(deLastBtn);
 		framePanel.add(resultBtn);
 		framePanel.add(chartPane);
-
-		/* framePanel.add(panel); */
-
-		setSize(700, 800);
+		framePanel.add(resultPane);
+		framePanel.add(returnBtn);
+		framePanel.add(exitBtn);
+		
+		setResizable(false);
+		setSize(1000, 800);
 		setVisible(true);
 		add(framePanel);
 	}
@@ -251,37 +254,41 @@ public class Main extends JFrame {
 	class MyPanel extends JPanel {
 		private List<ChartList> list;
 
-		public void paintComponent(Graphics g) {
+		protected void paintComponent(Graphics g) {
 			super.paintComponent(g);
+
 			if (list != null) {
 				for (int i = 0; i < list.size(); i++) {
 					ChartList chartList = list.get(i);
 
-					int width = (chartList.getpFinish() - chartList.getpStart()) * 20; // 곱하기 초해서 크기 조정
-					int height = 30; // 고정
-					int x = 10;
-					int y = 20; // 고정
+					int x = 30 * (i + 1);
+					int y = 40; // 고정
+					int width = 40 * (i + 2); // 곱하기 초해서 크기 조정
+					int height = 5;// 고정
 
 					if (i / model.getRowCount() == 0) {
 						g.setColor(chartList.getColor());
-						g.drawRect(x, y, 10, 10);
-						g.fillRect(x, y, 10, 10);
+						g.drawRect(width, height, 10, 10);
+						g.fillRect(width, height, 10, 10);
 						g.setColor(Color.black);
-						g.drawString(chartList.getPid(), (x + width) / 2, (y + height) / 2);
+						g.drawString(chartList.getPid(), width, height + 25);
 					}
 
+					g.drawString(Integer.toString(chartList.getpStart()), X - 5, y + 45);
 					g.setColor(chartList.getColor());
-					g.drawRect(x, y, 10, 10);
-					g.fillRect(x, y, 10, 10);
+					g.drawRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 12, 24);
+					g.fillRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 12, 24);
 					g.setColor(Color.black);
-					g.drawString(chartList.getPid(), (x + width) / 2, (y + height) / 2);
-					g.drawString(Integer.toString(chartList.getpStart()), x - width, y - 5);
-					g.setColor(chartList.getColor());
 
-					x += width;
+					if ((chartList.getpFinish() - chartList.getpStart()) == 1)
+						g.drawString(chartList.getPid(), X + 5, y + 18);
+					else
+						g.drawString(chartList.getPid(), X + 5, y + 18);
+
+					X += (chartList.getpFinish() - chartList.getpStart()) * 12;
 
 					if (i == list.size() - 1) {
-						g.drawString(Integer.toString(chartList.getpFinish()), x - width, y - 5);
+						g.drawString(Integer.toString(chartList.getpFinish()), X, y + 45);
 					}
 				}
 			}
@@ -289,7 +296,7 @@ public class Main extends JFrame {
 
 		public void setTimeQuantum(List<ChartList> list) {
 			this.list = list;
-			repaint();
+			 repaint(); 
 		}
 	}
 
