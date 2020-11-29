@@ -132,7 +132,7 @@ public class Main extends JFrame {
 				deChoiceBtn.setEnabled(false);
 				deLastBtn.setEnabled(false);
 				resultBtn.setEnabled(false);
-
+				Combo.setEnabled(false);
 				returnBtn.setEnabled(true);
 				exitBtn.setEnabled(true);
 
@@ -227,7 +227,8 @@ public class Main extends JFrame {
 				deLastBtn.setEnabled(true);
 				resultBtn.setEnabled(true);
 				returnBtn.setEnabled(false);
-				exitBtn.setEnabled(false);
+				exitBtn.setEnabled(true);
+				Combo.setEnabled(true);
 			}
 		});
 

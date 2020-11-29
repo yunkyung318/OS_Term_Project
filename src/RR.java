@@ -22,7 +22,6 @@ public class RR extends SchedulingManager {
         
         List<Process> processes = Copy.listCopy(this.getProcesses());
         
-        
         // time : 현재 Scheduling 중 흐르는 현재 시간
         // 초기값은 첫 프로세스의 도착시간인 0으로 설정
         int time = processes.get(0).getArriveTime();
@@ -57,7 +56,8 @@ public class RR extends SchedulingManager {
                 
             	
                 for (int i = 0; i < processes.size(); i++) {
-                	// 이게 뭐지.. 뭘까...
+                	// 다음 프로세스의 도착시간이 앞 프로세스 실행시간보다 늦었다면
+                	// 앞서 수행했던 프로세스가 다시 실행되어야 하므로 그 자리에 다시 삽입
                     if (processes.get(i).getArriveTime() > time) {
                     	processes.add(i, process);
                         break;
@@ -89,7 +89,6 @@ public class RR extends SchedulingManager {
                 	// Map에 현재 가리키는 프로세스의 정보가 이미 있다면
                 	// (프로세스가 이미 전에 들어왔었고, 두번째로 다시 할당받아 들어온 경우)
                     if (map.containsKey(chartList.getPid())) {
-                    	
                     	
                     	// 현재 간트차트 리스트의 시작시간에서 앞서 들어왔었던 때의 종료시간을 빼준다.
                     	// (같은 프로세스들 사이의 중간 대기 시간을 계산)
