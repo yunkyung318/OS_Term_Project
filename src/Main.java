@@ -31,7 +31,7 @@ public class Main extends JFrame {
 	MyPanel drawChart;
 
 	String blank[] = { "", "", "", "" }; // 프로세스 추가할 때 빈칸 생성
-	int X = 20;
+	private int X = 25;
 
 	public Main() {
 
@@ -45,7 +45,7 @@ public class Main extends JFrame {
 		table.setFillsViewportHeight(true);
 
 		js = new JScrollPane(table); // 프로세스가 많아지면 스크롤로 관리 가능
-		js.setBounds(10, 25, 540, 250);
+		js.setBounds(10, 15, 540, 250);
 
 		String choice[] = { "FCFS", "SJF", "비선점 Priority", "선점 Priority", "RR", "SRT", "HRN" };
 		Combo = new JComboBox<>();
@@ -102,15 +102,18 @@ public class Main extends JFrame {
 
 		drawChart = new MyPanel();
 		drawChart.setBackground(Color.WHITE);
+
 		chartPane = new JScrollPane(drawChart);
-		chartPane.setBounds(10, 320, 800,100);
+		chartPane.createHorizontalScrollBar();
+		chartPane.getHorizontalScrollBar();
+		chartPane.setBounds(10, 320, 650, 100);
 
 		resultmodel = new DefaultTableModel(
 				new String[] { "PID", "대기시간", "평균 대기시간", "응답시간", "평균 응답시간", "반환시간", "평균 반환시간" }, 0);
 		resulttable = new JTable(resultmodel);
 		resulttable.setFillsViewportHeight(true);
 		resultPane = new JScrollPane(resulttable);
-		resultPane.setBounds(10, 430, 550, 300);
+		resultPane.setBounds(10, 430, 550, 270);
 
 		resultBtn = new JButton("결과 보기");
 		resultBtn.setBackground(new Color(242, 255, 237));
@@ -120,6 +123,10 @@ public class Main extends JFrame {
 				String selected = (String) Combo.getSelectedItem();
 				SchedulingManager scheduling;
 
+				framePanel.add(resultPane);
+				framePanel.add(returnBtn);
+				framePanel.add(exitBtn);
+
 				resetBtn.setEnabled(false);
 				addBtn.setEnabled(false);
 				deChoiceBtn.setEnabled(false);
@@ -128,6 +135,8 @@ public class Main extends JFrame {
 
 				returnBtn.setEnabled(true);
 				exitBtn.setEnabled(true);
+
+				X = 30;
 
 				switch (selected) {
 				case "FCFS":
@@ -204,7 +213,7 @@ public class Main extends JFrame {
 		});
 
 		returnBtn = new JButton("다시하기");
-		returnBtn.setBounds(570, 665, 100, 25);
+		returnBtn.setBounds(570, 635, 100, 25);
 		returnBtn.setBackground(new Color(242, 255, 237));
 		returnBtn.setEnabled(false);
 		returnBtn.addActionListener(new ActionListener() {
@@ -223,7 +232,7 @@ public class Main extends JFrame {
 		});
 
 		exitBtn = new JButton("종료");
-		exitBtn.setBounds(570, 700, 100, 25);
+		exitBtn.setBounds(570, 670, 100, 25);
 		exitBtn.setBackground(new Color(242, 255, 237));
 		exitBtn.setEnabled(false);
 		exitBtn.addActionListener(new ActionListener() {
@@ -241,12 +250,9 @@ public class Main extends JFrame {
 		framePanel.add(deLastBtn);
 		framePanel.add(resultBtn);
 		framePanel.add(chartPane);
-		framePanel.add(resultPane);
-		framePanel.add(returnBtn);
-		framePanel.add(exitBtn);
-		
+
 		setResizable(false);
-		setSize(1000, 800);
+		setSize(750, 750);
 		setVisible(true);
 		add(framePanel);
 	}
@@ -276,8 +282,8 @@ public class Main extends JFrame {
 
 					g.drawString(Integer.toString(chartList.getpStart()), X - 5, y + 45);
 					g.setColor(chartList.getColor());
-					g.drawRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 12, 24);
-					g.fillRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 12, 24);
+					g.drawRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 5, 24);
+					g.fillRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 5, 24);
 					g.setColor(Color.black);
 
 					if ((chartList.getpFinish() - chartList.getpStart()) == 1)
@@ -285,7 +291,7 @@ public class Main extends JFrame {
 					else
 						g.drawString(chartList.getPid(), X + 5, y + 18);
 
-					X += (chartList.getpFinish() - chartList.getpStart()) * 12;
+					X += (chartList.getpFinish() - chartList.getpStart()) * 5;
 
 					if (i == list.size() - 1) {
 						g.drawString(Integer.toString(chartList.getpFinish()), X, y + 45);
@@ -296,12 +302,11 @@ public class Main extends JFrame {
 
 		public void setTimeQuantum(List<ChartList> list) {
 			this.list = list;
-			 repaint(); 
+			repaint();
 		}
 	}
 
 	public static void main(String[] args) {
 		new Main();
 	}
-
 }
