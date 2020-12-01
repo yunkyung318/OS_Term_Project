@@ -71,7 +71,7 @@ public class NPRE extends SchedulingManager {
         // 프로세스 별 대기 시간, 응답 시간, 반환 시간 계산
         for (Process process : this.getProcesses()) {
         	process.setWaitingTime(this.getChartList(process).getpStart() - process.getArriveTime());
-        	process.setResponseTime(this.getChartList(process).getpStart());
+        	process.setResponseTime(this.getChartList(process).getpStart() - process.getArriveTime());
         	process.setTurnAroundTime(process.getWaitingTime() + process.getBurstTime());
         }
     }

@@ -117,7 +117,7 @@ public class PRE extends SchedulingManager {
                     	process.setWaitingTime(chartList.getpStart() - process.getArriveTime());
                     	
                     	// 응답시간 = 처음 프로세스가 들어온 후 시작시간
-                    	process.setResponseTime(chartList.getpStart());
+                    	process.setResponseTime(chartList.getpStart() - process.getArriveTime());
                     }
                     
                     // 프로세스의 종료시간 업데이트

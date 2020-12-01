@@ -92,6 +92,10 @@ public class SRT extends SchedulingManager {
                         break;
                     }
                 }
+                
+                if (processes.size() == 0 && process.getBurstTime() != 0) {
+                	processes.add(process);
+                }
             }
             
             // 시간이 1씩 흐름에 따라 남은 실행시간을 1 감소
@@ -140,7 +144,7 @@ public class SRT extends SchedulingManager {
         Map map = new HashMap();
         
         // 프로세스별 대기시간, 응답시간, 반환시간 계산
-        // 이중 for문으로 프로세스 리스트와 간트차트 리스트 내의 항목들을 하나 가리킴
+        // 이중 for문으로 프로세스 리스트와 간트차트 리스트 내의 항목들을 하나씩 가리킴
         for (Process process : this.getProcesses()) {
             map.clear();
             
@@ -168,7 +172,7 @@ public class SRT extends SchedulingManager {
                     	process.setWaitingTime(chartList.getpStart() - process.getArriveTime());
                     	
                     	// 프로세스의 응답시간 계산 = 처음 프로세스가 들어온 후 시작시간
-                        process.setResponseTime(chartList.getpStart());
+                        process.setResponseTime(chartList.getpStart() - process.getArriveTime());
                     }
                     
                     // 프로세스의 종료시간 업데이트

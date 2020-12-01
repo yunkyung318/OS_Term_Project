@@ -283,8 +283,8 @@ public class Main extends JFrame {
 
 					g.drawString(Integer.toString(chartList.getpStart()), X - 5, y + 45);
 					g.setColor(chartList.getColor());
-					g.drawRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 5, 24);
-					g.fillRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 5, 24);
+					g.drawRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 10, 24);
+					g.fillRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 10, 24);
 					g.setColor(Color.black);
 
 					if ((chartList.getpFinish() - chartList.getpStart()) == 1)
@@ -292,7 +292,7 @@ public class Main extends JFrame {
 					else
 						g.drawString(chartList.getPid(), X + 5, y + 18);
 
-					X += (chartList.getpFinish() - chartList.getpStart()) * 5;
+					X += (chartList.getpFinish() - chartList.getpStart()) * 10;
 
 					if (i == list.size() - 1) {
 						g.drawString(Integer.toString(chartList.getpFinish()), X, y + 45);
