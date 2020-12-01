@@ -29,10 +29,13 @@ public class HRN extends SchedulingManager {
         	// 프로세스들이 기다리고 있는 Ready Queue
             List<Process> readyQueue = new ArrayList();
             
+            // System.out.println("----- 현재시간: " + time + " -----");
             // 처음엔 첫 프로세스의 도착시간으로 초기화 했기에, 첫 프로세스 하나만 가져옴
             for (Process process : processes) {
             	if (process.getArriveTime() <= time) {
             		readyQueue.add(process);
+            		process.setWaitingTime(time - process.getArriveTime());
+            		// System.out.println("PID: " + process.getPid() + "\t\twaitingTime: " + process.getWaitingTime() + "\t\tburstTime: " + process.getBurstTime()+ "\t\tPriority: " + process.getHRNCalc());
                 }
             }
             
@@ -41,7 +44,7 @@ public class HRN extends SchedulingManager {
                 if (((Process) o1).getHRNCalc() == ((Process) o2).getHRNCalc()) {
                     return 0;
                 }
-                else if (((Process) o1).getHRNCalc() < ((Process) o2).getHRNCalc()) {
+                else if (((Process) o1).getHRNCalc() > ((Process) o2).getHRNCalc()) {
                     return -1;
                 }
                 else {
@@ -51,6 +54,8 @@ public class HRN extends SchedulingManager {
             
             // 앞서 정렬된 Ready Queue에서 첫 번째 프로세스를 가져옴
             Process process = readyQueue.get(0);
+            
+            // System.out.println("PID: " + process.getPid());
             
             
             // 간트차트 리스트에 Ready Queue에서 첫 번째 프로세스를 가져와서 삽입
@@ -67,6 +72,7 @@ public class HRN extends SchedulingManager {
                     break;
                 }
             }
+            
         }
         
         // 프로세스 별 대기 시간, 응답 시간, 반환 시간 계산
@@ -75,9 +81,5 @@ public class HRN extends SchedulingManager {
         	process.setResponseTime(this.getChartList(process).getpStart());
         	process.setTurnAroundTime(process.getWaitingTime() + process.getBurstTime());
         }
-        /*
-        for (Process process : this.getProcesses()) {
-    		process.setPriority(process.getHRNCalc());
-    	}*/
     }
 }

@@ -120,6 +120,6 @@ public class Process {
     }
 	
 	public double getHRNCalc() {
-    	return ((this.getWaitingTime()+this.getBurstTime())/this.getBurstTime());
+    	return (((double)this.getWaitingTime()+(double)this.getBurstTime())/(double)this.getBurstTime());
     }
 }
