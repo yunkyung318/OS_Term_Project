@@ -52,7 +52,7 @@ public class Main extends JFrame {
 		for (int i = 0; i < choice.length; i++) {
 			Combo.addItem(choice[i]);
 		} // combo 박스를 이용해 스케줄링 방법을 리스트 구현
-		Combo.setBounds(560, 240, 100, 30);
+		Combo.setBounds(560, 233, 100, 30);
 
 		resetBtn = new JButton("메모리 리셋");
 		resetBtn.setBounds(10, 280, 100, 25);
