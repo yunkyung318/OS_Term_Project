@@ -213,7 +213,7 @@ public class Main extends JFrame {
 		});
 
 		returnBtn = new JButton("다시하기");
-		returnBtn.setBounds(570, 635, 100, 25);
+		returnBtn.setBounds(565, 635, 95, 25);
 		returnBtn.setBackground(new Color(242, 255, 237));
 		returnBtn.setEnabled(false);
 		returnBtn.addActionListener(new ActionListener() {
@@ -233,7 +233,7 @@ public class Main extends JFrame {
 		});
 
 		exitBtn = new JButton("종료");
-		exitBtn.setBounds(570, 670, 100, 25);
+		exitBtn.setBounds(565, 670, 95, 25);
 		exitBtn.setBackground(new Color(242, 255, 237));
 		exitBtn.setEnabled(false);
 		exitBtn.addActionListener(new ActionListener() {
@@ -253,7 +253,7 @@ public class Main extends JFrame {
 		framePanel.add(chartPane);
 
 		setResizable(false);
-		setSize(750, 750);
+		setBounds(350,30,680, 750);
 		setVisible(true);
 		add(framePanel);
 	}
@@ -283,8 +283,8 @@ public class Main extends JFrame {
 
 					g.drawString(Integer.toString(chartList.getpStart()), X - 5, y + 45);
 					g.setColor(chartList.getColor());
-					g.drawRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 10, 24);
-					g.fillRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 10, 24);
+					g.drawRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 20, 24);
+					g.fillRect(X, y, (chartList.getpFinish() - chartList.getpStart()) * 20, 24);
 					g.setColor(Color.black);
 
 					if ((chartList.getpFinish() - chartList.getpStart()) == 1)
@@ -292,7 +292,7 @@ public class Main extends JFrame {
 					else
 						g.drawString(chartList.getPid(), X + 5, y + 18);
 
-					X += (chartList.getpFinish() - chartList.getpStart()) * 10;
+					X += (chartList.getpFinish() - chartList.getpStart()) * 20;
 
 					if (i == list.size() - 1) {
 						g.drawString(Integer.toString(chartList.getpFinish()), X, y + 45);
