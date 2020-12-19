@@ -251,7 +251,8 @@ public class Main extends JFrame {
 		framePanel.add(deLastBtn);
 		framePanel.add(resultBtn);
 		framePanel.add(chartPane);
-
+		framePanel.setBackground(new Color(255,245,245));
+		
 		setResizable(false);
 		setBounds(350,30,680, 750);
 		setVisible(true);
