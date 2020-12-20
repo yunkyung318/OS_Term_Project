@@ -28,14 +28,12 @@ public class HRN extends SchedulingManager {
         while (!processes.isEmpty()) {
         	// 프로세스들이 기다리고 있는 Ready Queue
             List<Process> readyQueue = new ArrayList();
-            
-            // System.out.println("----- 현재시간: " + time + " -----");
+
             // 처음엔 첫 프로세스의 도착시간으로 초기화 했기에, 첫 프로세스 하나만 가져옴
             for (Process process : processes) {
             	if (process.getArriveTime() <= time) {
             		readyQueue.add(process);
             		process.setWaitingTime(time - process.getArriveTime());
-            		// System.out.println("PID: " + process.getPid() + "\t\twaitingTime: " + process.getWaitingTime() + "\t\tburstTime: " + process.getBurstTime()+ "\t\tPriority: " + process.getHRNCalc());
                 }
             }
             
@@ -54,10 +52,7 @@ public class HRN extends SchedulingManager {
             
             // 앞서 정렬된 Ready Queue에서 첫 번째 프로세스를 가져옴
             Process process = readyQueue.get(0);
-            
-            // System.out.println("PID: " + process.getPid());
-            
-            
+                     
             // 간트차트 리스트에 Ready Queue에서 첫 번째 프로세스를 가져와서 삽입
             this.getCLists().add(new ChartList(process.getPid(), time, time + process.getBurstTime(), process.getColor()));
             

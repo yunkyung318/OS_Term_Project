@@ -65,7 +65,6 @@ public class SRT extends SchedulingManager {
             
             // 간트차트 리스트에 Ready Queue에서 첫 번째 프로세스를 가져와서 삽입
             // 현재 흐르는 시간인 time은 1씩 증가
-            //this.getCLists().add(new ChartList(process.getPid(), time, ++time, process.getColor()));
             this.getCLists().add(new ChartList(process.getPid(), time, time + oneBurstTime, process.getColor()));
             
             // 다음 시작시간 = 현재 시간 + 한번에 실행하는 시간 단위
